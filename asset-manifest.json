@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.js": "/apollo-state-management/static/js/main.05d1d887.chunk.js",
+    "main.js.map": "/apollo-state-management/static/js/main.05d1d887.chunk.js.map",
+    "runtime-main.js": "/apollo-state-management/static/js/runtime-main.235949dc.js",
+    "runtime-main.js.map": "/apollo-state-management/static/js/runtime-main.235949dc.js.map",
+    "static/js/2.22a48014.chunk.js": "/apollo-state-management/static/js/2.22a48014.chunk.js",
+    "static/js/2.22a48014.chunk.js.map": "/apollo-state-management/static/js/2.22a48014.chunk.js.map",
+    "index.html": "/apollo-state-management/index.html",
+    "precache-manifest.300b38fcf53851933ad9720626a8e05a.js": "/apollo-state-management/precache-manifest.300b38fcf53851933ad9720626a8e05a.js",
+    "service-worker.js": "/apollo-state-management/service-worker.js",
+    "static/js/2.22a48014.chunk.js.LICENSE.txt": "/apollo-state-management/static/js/2.22a48014.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.235949dc.js",
+    "static/js/2.22a48014.chunk.js",
+    "static/js/main.05d1d887.chunk.js"
+  ]
+}
