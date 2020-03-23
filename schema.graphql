@@ -1,0 +1,9 @@
+# void schema, each module extends it as needed
+
+type Mutation {
+  void: Boolean
+}
+
+type Query {
+  void: Boolean
+}
