@@ -6,16 +6,15 @@
 import { TaskState } from "./../../../../globalTypes";
 
 // ====================================================
-// GraphQL query operation: todosQuery
+// GraphQL mutation operation: editTodoMutation
 // ====================================================
 
-export interface todosQuery_todos {
-  __typename: "Todo";
-  id: string;
-  text: string;
-  state: TaskState;
+export interface editTodoMutation {
+  editTodo: boolean | null;
 }
 
-export interface todosQuery {
-  todos: todosQuery_todos[];
+export interface editTodoMutationVariables {
+  id: string;
+  text?: string | null;
+  state?: TaskState | null;
 }

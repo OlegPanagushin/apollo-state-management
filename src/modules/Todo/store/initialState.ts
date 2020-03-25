@@ -1,22 +1,24 @@
+import { TaskState } from '../../../globalTypes'
+
 export const initialState = {
   todos: [
     {
       __typename: 'Todo',
       id: '1',
       text: 'Create boilerplate',
-      done: false,
+      state: TaskState.IDLE,
     },
     {
       __typename: 'Todo',
       id: '2',
       text: '???',
-      done: true,
+      state: TaskState.DONE,
     },
     {
       __typename: 'Todo',
       id: '3',
       text: 'Profit',
-      done: false,
+      state: TaskState.IDLE,
     },
   ],
 }

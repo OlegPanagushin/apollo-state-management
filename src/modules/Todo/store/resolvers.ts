@@ -1,6 +1,7 @@
-import { TAppResolvers } from '../../../lib/types/gql'
-import { TODOS, todosQuery, TODO_DONE_FRAGMENT, todoDoneFragment } from './queries'
 import { initialState } from './initialState'
+import { TODOS, todosQuery, todoFragment, TODO_EDIT_FRAGMENT } from './queries'
+import { TAppResolvers } from '../../../lib/types/gql'
+import { TaskState } from '../../../globalTypes'
 
 let counter = initialState.todos.length
 
@@ -8,7 +9,7 @@ export const resolvers: TAppResolvers = {
   Mutation: {
     addTodo: (_, { text }, { cache }) => {
       const prev = cache.readQuery<todosQuery>({ query: TODOS })
-      const todo = { __typename: 'Todo', id: (++counter).toString(), text, done: false }
+      const todo = { __typename: 'Todo', id: (++counter).toString(), text, state: TaskState.IDLE }
       const todos = [...(prev?.todos || []), todo]
       const data = { todos }
 
@@ -24,26 +25,31 @@ export const resolvers: TAppResolvers = {
 
       if (!prev || idx === undefined || idx === -1) return false
 
-      const newTodos = [...prev.todos]
-
-      newTodos.splice(idx, 1)
-      cache.writeQuery({ query: TODOS, data: { todos: newTodos } })
+      prev.todos.splice(idx, 1)
+      cache.writeQuery({ query: TODOS, data: { todos: prev.todos } })
 
       return true
     },
-    toggleTodo: (_, { id, done }: { id: string; done: boolean }, { cache }) => {
-      cache.writeFragment<todoDoneFragment>({
-        fragment: TODO_DONE_FRAGMENT,
-        id: id,
-        data: {
-          __typename: 'Todo',
-          done,
-        },
-      })
+    editTodo: (_, { id, text, state }: { id: string; text: string; state: TaskState }, { cache }) => {
+      const todo = cache.readFragment<todoFragment>({ fragment: TODO_EDIT_FRAGMENT, id })
+      const data = { ...todo, text, state }
+
+      cache.writeFragment({ fragment: TODO_EDIT_FRAGMENT, id, data })
 
       return true
     },
   },
 
-  Query: {},
+  Query: {
+    todosByState: (_, { state }: { state: TaskState }, { cache }) => {
+      const data = cache.readQuery<todosQuery>({ query: TODOS })
+
+      if (!data || !data.todos) return []
+
+      const todos = [...data.todos]
+
+      if (!state) return todos
+      return todos.filter((x) => x.state === state)
+    },
+  },
 }

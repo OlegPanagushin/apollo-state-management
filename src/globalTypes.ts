@@ -7,6 +7,12 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum TaskState {
+  DONE = "DONE",
+  IDLE = "IDLE",
+  IN_PROGRESS = "IN_PROGRESS",
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

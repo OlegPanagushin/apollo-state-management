@@ -1,49 +1,44 @@
 import React, { ChangeEventHandler, FC, MouseEventHandler, useState } from 'react'
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import {
   AppBar,
   Button,
-  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Fab,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
   Paper,
+  Tab,
+  Tabs,
   TextField,
   Toolbar,
   Typography,
 } from '@material-ui/core'
-import { Add, Delete, PlaylistAdd } from '@material-ui/icons'
-import { motion, AnimatePresence } from 'framer-motion'
+import { Add, PlaylistAdd } from '@material-ui/icons'
 
+import { TodoList } from './components/TodoList'
+import { ADD_TODO, addTodoMutation, addTodoMutationVariables } from './store/queries'
 import { useStyles } from './Todo.styles'
-import {
-  TODOS,
-  todosQuery,
-  ADD_TODO,
-  addTodoMutation,
-  addTodoMutationVariables,
-  REMOVE_TODO,
-  removeTodoMutation,
-  removeTodoMutationVariables,
-  TOGGLE_TODO,
-  toggleTodoMutation,
-  toggleTodoMutationVariables,
-} from './store/queries'
+import { TaskState } from '../../globalTypes'
+
+type tabChangeEventHandler = (event: React.ChangeEvent<{}>, value: any) => void
+
+const getTaskStateFromTabIdx = (tabIdx: number): TaskState | undefined => {
+  switch (tabIdx) {
+    case 1:
+      return TaskState.IDLE
+    case 2:
+      return TaskState.DONE
+    default:
+      return undefined
+  }
+}
 
 export const Todo: FC = () => {
   const [mutationAdd] = useMutation<addTodoMutation, addTodoMutationVariables>(ADD_TODO)
-  const [mutationRemove] = useMutation<removeTodoMutation, removeTodoMutationVariables>(REMOVE_TODO)
-  const [mutationToggle] = useMutation<toggleTodoMutation, toggleTodoMutationVariables>(TOGGLE_TODO)
-  const { data } = useQuery<todosQuery>(TODOS)
   const classes = useStyles()
+  const [tab, setTab] = useState(0)
   const [open, setOpen] = useState(false)
   const [task, setTask] = useState('')
   const onAddClick = () => {
@@ -62,9 +57,9 @@ export const Todo: FC = () => {
     setTask(e.target.value)
   }
 
-  const animate = { opacity: 1 }
-  const initial = { opacity: 0 }
-  const exit = { opacity: 0 }
+  const handleChange: tabChangeEventHandler = (_, newValue) => {
+    setTab(newValue)
+  }
 
   return (
     <>
@@ -76,40 +71,19 @@ export const Todo: FC = () => {
       </AppBar>
 
       <Paper className={classes.todos}>
-        <List>
-          <AnimatePresence>
-            {data?.todos.map(({ id, done, text }) => {
-              return (
-                <ListItem
-                  animate={animate}
-                  button
-                  component={motion.div}
-                  dense
-                  exit={exit}
-                  initial={initial}
-                  key={id}
-                  onClick={() => mutationToggle({ variables: { id, done: !done } })}
-                >
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={done}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{ 'aria-labelledby': id }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText id={id} primary={text} />
-                  <ListItemSecondaryAction>
-                    <IconButton aria-label="comments" edge="end" onClick={() => mutationRemove({ variables: { id } })}>
-                      <Delete />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              )
-            })}
-          </AnimatePresence>
-        </List>
+        <Tabs
+          value={tab}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+          aria-label="todo list"
+        >
+          <Tab label="All" />
+          <Tab label="Pending" />
+          <Tab label="Done" />
+        </Tabs>
+        <TodoList taskState={getTaskStateFromTabIdx(tab)} />
       </Paper>
 
       <Fab className={classes.addButton} color="primary" onClick={onAddClick} variant="round">

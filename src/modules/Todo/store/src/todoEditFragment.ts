@@ -3,11 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { TaskState } from "./../../../../globalTypes";
+
 // ====================================================
-// GraphQL fragment: todoDoneFragment
+// GraphQL fragment: todoEditFragment
 // ====================================================
 
-export interface todoDoneFragment {
+export interface todoEditFragment {
   __typename: "Todo";
-  done: boolean;
+  text: string;
+  state: TaskState;
 }
