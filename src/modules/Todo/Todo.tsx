@@ -80,7 +80,7 @@ export const Todo: FC = () => {
           aria-label="todo list"
         >
           <Tab label="All" />
-          <Tab label="Pending" />
+          <Tab label="In Progress" />
           <Tab label="Done" />
         </Tabs>
         <TodoList taskState={getTaskStateFromTabIdx(tab)} />
